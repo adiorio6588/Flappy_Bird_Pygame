@@ -40,21 +40,21 @@ def rotate_bird(bird):
 
 def bird_animation():
 	new_bird = bird_frames[bird_index]
-	new_bird_rect = new_bird.get_rect(center = (100,bird_rect.centery))
+	new_bird_rect = new_bird.get_rect(center = (30,bird_rect.centery))
 	return new_bird,new_bird_rect
 
 def score_display(game_state):
 	if game_state == 'main_game':
-		score_surface = game_font.render(str(int(score)),True,(255,255,255))
-		score_rect = score_surface.get_rect(center = (188,100))
+		score_surface = game_font.render(str(int(score)),True,(255,255,255)) # 255,255,255 is the font color
+		score_rect = score_surface.get_rect(center = (144,30)) # Current Score display placement
 		screen.blit(score_surface,score_rect)
 	if game_state == 'game_over':
-		score_surface = game_font.render(f'Score: {int(score)}' ,True,(255,255,255))
-		score_rect = score_surface.get_rect(center = (188,100))
+		score_surface = game_font.render(f'Score: {int(score)}' ,True,(255,255,255))  
+		score_rect = score_surface.get_rect(center = (144,30)) # Current Score display placement
 		screen.blit(score_surface,score_rect)
 
 		high_score_surface = game_font.render(f'High score: {int(high_score)}',True,(255,255,255))
-		high_score_rect = high_score_surface.get_rect(center = (188,850))
+		high_score_rect = high_score_surface.get_rect(center = (144,425)) # High Score display placement
 		screen.blit(high_score_surface,high_score_rect)
 
 def update_score(score, high_score):
@@ -63,49 +63,44 @@ def update_score(score, high_score):
 	return high_score
 
 pygame.init()
-pygame.mixer.pre_init(frequency = 44100, size = 16, channels = 1, buffer = 334)
+pygame.mixer.pre_init(frequency = 44100, size = 16, channels = 1, buffer = 512)
 screen = pygame.display.set_mode((288,512))
 clock = pygame.time.Clock()
-game_font = pygame.font.Font('04B_19.ttf',40)
+game_font = pygame.font.Font('04B_19.ttf',25)
 
 # Game Variables
-gravity = 0.35
+gravity = 0.25
 bird_movement = 0
 game_active = True
 score = 0
 high_score = 0
 
 bg_surface = pygame.image.load('assets/background-day.png').convert()
-# bg_surface = pygame.transform.scale2x(bg_surface)
 
 floor_surface = pygame.image.load('assets/base.png').convert()
-# floor_surface = pygame.transform.scale2x(floor_surface)
+
 floor_x_pos = 0
 
-bird_downflap = pygame.image.load('assets/bluebird-downflap.png').convert_alpha()
-bird_midflap = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
-bird_upflap = pygame.image.load('assets/bluebird-upflap.png').convert_alpha()
+bird_downflap = pygame.image.load('assets/yellowbird-downflap.png').convert_alpha()
+bird_midflap = pygame.image.load('assets/yellowbird-midflap.png').convert_alpha()
+bird_upflap = pygame.image.load('assets/yellowbird-upflap.png').convert_alpha()
 bird_frames = [bird_downflap,bird_midflap,bird_upflap]
 bird_index = 0
 bird_surface = bird_frames[bird_index]
-bird_rect = bird_surface.get_rect(center = (10,256))  ####### BIRD POSITION
+bird_rect = bird_surface.get_rect(center = (30,256))  ####### Bird Position
 
 BIRDFLAP = pygame.USEREVENT + 1
 pygame.time.set_timer(BIRDFLAP,200)
 
-# bird_surface = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
-# bird_surface = pygame.transform.scale2x(bird_surface)
-# bird_rect = bird_surface.get_rect(center = (100,334))
-
 pipe_surface = pygame.image.load('assets/pipe-green.png')
-# pipe_surface = pygame.transform.scale2x(pipe_surface)
+
 pipe_list = []
 SPAWNPIPE = pygame.USEREVENT
 pygame.time.set_timer(SPAWNPIPE,1200)
 pipe_height = [300, 350, 400]
-# [300,500,700]
+
 game_over_surface = pygame.image.load('assets/message.png').convert_alpha()
-game_over_rect = game_over_surface.get_rect(center = (188,334))
+game_over_rect = game_over_surface.get_rect(center = (144,256))
 
 flap_sound = pygame.mixer.Sound('sound/sfx_wing.wav')
 death_sound = pygame.mixer.Sound('sound/sfx_hit.wav')
@@ -120,12 +115,12 @@ while True:
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_SPACE and game_active:
 				bird_movement = 0
-				bird_movement -= 8
+				bird_movement -= 6
 				flap_sound.play()
 			if event.key == pygame.K_SPACE and game_active == False:
 				game_active = True
 				pipe_list.clear()
-				bird_rect.center = (10,256)  # (10,256)) (100, 512)ORG
+				bird_rect.center = (30,256)  # (10,256)) (100, 512)ORG
 				bird_movement = 0
 				score = 0
 
@@ -174,4 +169,4 @@ while True:
 	
 
 	pygame.display.update()
-	clock.tick(10)  # 100 frames per second
+	clock.tick(100)  # 100 frames per second
